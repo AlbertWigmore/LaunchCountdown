@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 class LaunchQuery(object):
     def __init__(self, *args, **kwargs):
-        self.url_base = 'https://launchlibrary.net/1.2/'
+        self.url_base = 'https://launchlibrary.net/1.1/'
 
     def __getattr__(self, method_name):
         if method_name in ['agency', 'agencytype', 'calendar', 'eventtype',
@@ -21,15 +21,18 @@ class LaunchQuery(object):
         else:
             raise AttributeError()
 
-    def launch2(self, now, dur):
-        current = now.strftime('%Y-%m-%d')
-        next = (now + timedelta(days=dur)).strftime('%Y-%m-%d')
-        r = requests.get(self.url_base + 'launch/' + current + '/' + next)
+    def launch_next_full(self, next):
+        r = requests.get(self.url_base + 'launch/next/' + str(next))
         return r.json()
 
 
-if __name__ == '__main__':
-    c = LaunchQuery()
+def update_launch_countdown(data):
+    launch_time = datetime.strptime(data['launches'][0]['net'], '%B %d, %Y %H:%M:%S UTC')
+    total_seconds = (launch_time - datetime.now()).total_seconds()
+    return total_seconds
+
+
+'''
     data = c.launch(next=1)
     launch_time = datetime.strptime(data['launches'][0]['net'], '%B %d, %Y %H:%M:%S UTC')
     print(launch_time)
@@ -44,3 +47,4 @@ if __name__ == '__main__':
         minutes, seconds = [int(z) for z in divmod(remainder, 60)]
         print '\r' + str(days) + ' days, ' + str(hours) + ':' + str(minutes) + ':' + str(seconds)
         time.sleep(1)
+'''

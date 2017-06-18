@@ -49,6 +49,14 @@ class Indicator():
         launch_time = datetime.strptime(data['launches'][0]['net'], '%B %d, %Y %H:%M:%S UTC')
         while True:
             s = (launch_time - datetime.now()).total_seconds()
+            if s < 0:
+                self.create_menu()
+                data = c.launch(next=5)
+                for x in data['launches']:
+                    launch_time = datetime.strptime(x['net'], '%B %d, %Y %H:%M:%S UTC')
+                    s = (launch_time - datetime.now()).total_seconds()
+                    if s > 0:
+                        continue
             days, remainder = [int(z) for z in divmod(s, 86400)]
             hours, remainder = [int(z) for z in divmod(remainder, 3600)]
             minutes, seconds = [int(z) for z in divmod(remainder, 60)]
