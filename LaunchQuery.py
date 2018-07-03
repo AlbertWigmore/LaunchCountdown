@@ -21,7 +21,7 @@ class LaunchQuery(object):
         else:
             raise AttributeError()
 
-    def launch_next_full(self, next):
+    def launch_next(self, next):
         r = requests.get(self.url_base + 'launch/next/' + str(next))
         return r.json()
 

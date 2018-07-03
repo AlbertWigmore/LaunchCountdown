@@ -26,7 +26,7 @@ class Indicator():
     def create_menu(self):
         menu = Gtk.Menu()
         c = LaunchQuery()
-        data = c.launch_next_full(5)
+        data = c.launch_next(5)
         for x in data['launches']:
             launchname = Gtk.MenuItem(x['name'])
             menu.append(launchname)
