@@ -20,7 +20,7 @@ def acquire_launch():
             data['launches'][launch]['net'],
             '%B %d, %Y %H:%M:%S UTC'
         )
-        if (launch_time - datetime.now()).total_seconds() < 0:
+        if (launch_time - datetime.now()).total_seconds() > 0:
             acquisition = False
         else:
             launch += 1
@@ -41,9 +41,8 @@ def run():
         align=str.ljust
     )
     while True:
-        time.sleep(0.01)
+        time.sleep(0.25)
         s = (launch_time - datetime.now()).total_seconds()
-        # if s < 0:
         days, remainder = [int(z) for z in divmod(s, 86400)]
         hours, remainder = [int(z) for z in divmod(remainder, 3600)]
         minutes, seconds = [int(z) for z in divmod(remainder, 60)]
@@ -51,6 +50,14 @@ def run():
         mention = '{:02} day(s) - {:02}:{:02}:{:02}'.format(days, hours, minutes, seconds)
 
         interface.write_line(3, mention, str.center)
+
+        if s < 0:
+            mission, rocket, location, launch_time = acquire_launch()
+
+            interface.write(
+                [mission, rocket, location, ''],
+                align=str.ljust
+            )
 
     interface.stop()
 

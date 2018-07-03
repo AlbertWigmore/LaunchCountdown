@@ -1,6 +1,7 @@
-import LCDDriver
 import threading
 from time import sleep
+
+import LCDDriver
 
 
 class LCDInterface():
